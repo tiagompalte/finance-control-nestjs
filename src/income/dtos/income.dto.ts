@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { BaseDto } from '../../base/base.dto'
+import { BaseDto } from '../../base'
 
 export class IncomeDto extends BaseDto {
   @ApiProperty()

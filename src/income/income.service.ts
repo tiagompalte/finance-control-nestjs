@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { IncomeRepository } from './income.repository'
 import { IncomeEntity } from './income.entity'
 
@@ -20,6 +20,7 @@ export class IncomeService {
 
   async create(income: Partial<IncomeEntity>): Promise<IncomeEntity> {
     income.date = IncomeService.validateDate(income.date)
+    await this.validateDescription(income.description, income.date, income.id)
     return this.repository.save(income)
   }
 
@@ -37,10 +38,47 @@ export class IncomeService {
   ): Promise<IncomeEntity> {
     income.date = IncomeService.validateDate(income.date)
     income.id = id
+    await this.validateDescription(income.description, income.date, income.id)
     return this.repository.recover(income)
   }
 
   async delete(id: string): Promise<void> {
     await this.repository.softDelete(id)
+  }
+
+  private async validateDescription(
+    description: string,
+    date: Date,
+    id?: string
+  ): Promise<void> {
+    let where =
+      'description = :description && inc.month = :month && inc.year = :year'
+    const parameters: any = {
+      description,
+      month: date.getMonth() + 1,
+      year: date.getFullYear()
+    }
+    if (id) {
+      where = where.concat(' && id != :id')
+      parameters.id = id
+    }
+
+    const count = await this.repository
+      .createQueryBuilder()
+      .select(['inc.month', 'inc.year'])
+      .addFrom((subQuery) => {
+        return subQuery
+          .select('month(date)', 'month')
+          .addSelect('year(date)', 'year')
+          .from(IncomeEntity, 'income')
+      }, 'inc')
+      .where(where, parameters)
+      .getCount()
+
+    if (count) {
+      throw new BadRequestException(
+        'Income with the same description and date exists'
+      )
+    }
   }
 }
