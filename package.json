@@ -27,6 +27,7 @@
     "@nestjs/platform-express": "^8.0.0",
     "@nestjs/swagger": "^5.1.5",
     "@nestjs/typeorm": "^8.0.3",
+    "@types/validator": "^13.7.1",
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.2",
     "mysql2": "^2.3.3",
@@ -34,7 +35,8 @@
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
     "swagger-ui-express": "^4.3.0",
-    "typeorm": "^0.2.41"
+    "typeorm": "^0.2.41",
+    "validator": "^13.7.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.0.0",
