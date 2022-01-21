@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { IncomeRepository } from './income.repository'
 import { IncomeEntity } from './income.entity'
-import { DateUtil } from '../util/DateUtil'
+import { DateUtil } from '../util/date-util'
 
 @Injectable()
 export class IncomeService {
