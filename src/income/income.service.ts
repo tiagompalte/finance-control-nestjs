@@ -1,25 +1,14 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { IncomeRepository } from './income.repository'
 import { IncomeEntity } from './income.entity'
+import { DateUtil } from '../util/DateUtil'
 
 @Injectable()
 export class IncomeService {
   constructor(private readonly repository: IncomeRepository) {}
 
-  private static validateDate(date: Date): Date {
-    if (!date) {
-      return date
-    }
-    if (typeof date === 'string') {
-      date = new Date(date)
-    }
-    return new Date(
-      [date?.getFullYear(), date?.getMonth() + 1, date?.getDate()].join('-')
-    )
-  }
-
   async create(income: Partial<IncomeEntity>): Promise<IncomeEntity> {
-    income.date = IncomeService.validateDate(income.date)
+    income.date = DateUtil.convertToDate(income.date)
     await this.validateDescription(income.description, income.date, income.id)
     return this.repository.save(income)
   }
@@ -36,7 +25,7 @@ export class IncomeService {
     id: string,
     income: Partial<IncomeEntity>
   ): Promise<IncomeEntity> {
-    income.date = IncomeService.validateDate(income.date)
+    income.date = DateUtil.convertToDate(income.date)
     income.id = id
     await this.validateDescription(income.description, income.date, income.id)
     return this.repository.recover(income)
