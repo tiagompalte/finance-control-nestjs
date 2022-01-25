@@ -50,6 +50,26 @@ export class IncomeService {
       .getMany()
   }
 
+  async balanceByYearMonth(year: number, month: number): Promise<number> {
+    const result = await this.repository
+      .createQueryBuilder('income')
+      .select('sum(income.value)', 'balance')
+      .innerJoin(
+        (qb) =>
+          qb
+            .select('id')
+            .addSelect('month(date)', 'month')
+            .addSelect('year(date)', 'year')
+            .from(IncomeEntity, 'inc'),
+        'inc',
+        'income.id = inc.id'
+      )
+      .where('inc.month = :month && inc.year = :year', { month, year })
+      .getRawOne()
+
+    return result.balance
+  }
+
   async update(
     id: string,
     income: Partial<IncomeEntity>
@@ -82,14 +102,18 @@ export class IncomeService {
     }
 
     const count = await this.repository
-      .createQueryBuilder()
-      .select(['inc.month', 'inc.year'])
-      .addFrom((subQuery) => {
-        return subQuery
-          .select('month(date)', 'month')
-          .addSelect('year(date)', 'year')
-          .from(IncomeEntity, 'income')
-      }, 'inc')
+      .createQueryBuilder('income')
+      .select(['income.month', 'income.year'])
+      .innerJoin(
+        (qb) =>
+          qb
+            .select('id')
+            .addSelect('month(date)', 'month')
+            .addSelect('year(date)', 'year')
+            .from(IncomeEntity, 'inc'),
+        'inc',
+        'income.id = inc.id'
+      )
       .where(where, parameters)
       .getCount()
 

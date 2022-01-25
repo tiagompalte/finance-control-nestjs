@@ -3,6 +3,7 @@ import { ExpenseRepository } from './expense.repository'
 import { ExpenseEntity } from './expense.entity'
 import { DateUtil } from '../util/date-util'
 import { ILike } from 'typeorm'
+import { BalanceCategoryExpenseDto } from '../balance/balance-category-expense.dto'
 
 @Injectable()
 export class ExpenseService {
@@ -54,6 +55,29 @@ export class ExpenseService {
       .getMany()
   }
 
+  async balanceGroupByCategoryInYearMonth(
+    year: number,
+    month: number
+  ): Promise<BalanceCategoryExpenseDto[]> {
+    return this.repository
+      .createQueryBuilder('expense')
+      .select('expense.category', 'category')
+      .addSelect('sum(expense.value)', 'value')
+      .innerJoin(
+        (qb) =>
+          qb
+            .select('id')
+            .addSelect('month(date)', 'month')
+            .addSelect('year(date)', 'year')
+            .from(ExpenseEntity, 'exp'),
+        'exp',
+        'expense.id = exp.id'
+      )
+      .where('exp.month = :month && exp.year = :year', { month, year })
+      .groupBy('category')
+      .getRawMany()
+  }
+
   async update(
     id: string,
     expense: Partial<ExpenseEntity>
@@ -90,14 +114,18 @@ export class ExpenseService {
     }
 
     const count = await this.repository
-      .createQueryBuilder()
-      .select(['exp.month', 'exp.year'])
-      .addFrom((subQuery) => {
-        return subQuery
-          .select('month(date)', 'month')
-          .addSelect('year(date)', 'year')
-          .from(ExpenseEntity, 'expense')
-      }, 'exp')
+      .createQueryBuilder('expense')
+      .select(['expense.month', 'expense.year'])
+      .innerJoin(
+        (qb) =>
+          qb
+            .select('id')
+            .addSelect('month(date)', 'month')
+            .addSelect('year(date)', 'year')
+            .from(ExpenseEntity, 'exp'),
+        'exp',
+        'expense.id = exp.id'
+      )
       .where(where, parameters)
       .getCount()
 
