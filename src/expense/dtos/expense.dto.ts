@@ -1,5 +1,6 @@
 import { BaseDto } from '../../base'
 import { ApiProperty } from '@nestjs/swagger'
+import { CategoryEnum } from '../category.enum'
 
 export class ExpenseDto extends BaseDto {
   @ApiProperty()
@@ -10,4 +11,9 @@ export class ExpenseDto extends BaseDto {
 
   @ApiProperty()
   date: Date
+
+  @ApiProperty({
+    enum: CategoryEnum
+  })
+  category?: CategoryEnum
 }

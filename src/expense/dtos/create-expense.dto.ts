@@ -1,5 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsDateString, IsNotEmpty, IsNumber, Min } from 'class-validator'
+import {
+  IsDateString,
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  Min
+} from 'class-validator'
+import { CategoryEnum } from '../category.enum'
 
 export class CreateExpenseDto {
   @ApiProperty()
@@ -16,4 +24,11 @@ export class CreateExpenseDto {
   @ApiProperty()
   @IsDateString()
   date: Date
+
+  @ApiProperty({
+    enum: CategoryEnum
+  })
+  @IsOptional()
+  @IsEnum(CategoryEnum)
+  category?: CategoryEnum
 }

@@ -1,5 +1,6 @@
 import { BaseEntity } from '../base'
 import { Column, Entity } from 'typeorm'
+import { CategoryEnum } from './category.enum'
 
 @Entity('expense')
 export class ExpenseEntity extends BaseEntity {
@@ -16,7 +17,16 @@ export class ExpenseEntity extends BaseEntity {
   value: number
 
   @Column({
-    type: 'date'
+    type: 'date',
+    nullable: false
   })
   date: Date
+
+  @Column({
+    type: 'enum',
+    enum: CategoryEnum,
+    nullable: true,
+    default: CategoryEnum.OTHERS
+  })
+  category?: CategoryEnum
 }

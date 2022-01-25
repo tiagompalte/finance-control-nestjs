@@ -33,9 +33,9 @@ export class ExpenseController {
     type: ExpenseDto
   })
   async create(
-    @Body(ValidationPipe) income: CreateExpenseDto
+    @Body(ValidationPipe) expense: CreateExpenseDto
   ): Promise<ExpenseDto> {
-    return this.expenseService.create(income)
+    return this.expenseService.create(expense)
   }
 
   @Get()
