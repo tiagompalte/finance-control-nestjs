@@ -6,6 +6,7 @@ import {
   Get,
   Param,
   ParseBoolPipe,
+  ParseIntPipe,
   ParseUUIDPipe,
   Post,
   Put,
@@ -59,6 +60,18 @@ export class ExpenseController {
     withDeleted?: boolean
   ): Promise<ExpenseDto[]> {
     return this.expenseService.findAll(description, withDeleted)
+  }
+
+  @Get('/:year/:month')
+  @ApiOkResponse({
+    isArray: true,
+    type: ExpenseDto
+  })
+  async findByYearMonth(
+    @Param('year', ParseIntPipe) year: number,
+    @Param('month', ParseIntPipe) month: number
+  ): Promise<ExpenseDto[]> {
+    return this.expenseService.findByYearMonth(year, month)
   }
 
   @Get(':id')

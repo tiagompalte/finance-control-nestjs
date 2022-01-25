@@ -36,6 +36,24 @@ export class ExpenseService {
     return this.repository.findOne(id, { withDeleted })
   }
 
+  async findByYearMonth(year: number, month: number): Promise<ExpenseEntity[]> {
+    return this.repository
+      .createQueryBuilder('expense')
+      .select()
+      .innerJoin(
+        (qb) =>
+          qb
+            .select('id')
+            .addSelect('month(date)', 'month')
+            .addSelect('year(date)', 'year')
+            .from(ExpenseEntity, 'exp'),
+        'exp',
+        'expense.id = exp.id'
+      )
+      .where('exp.month = :month && exp.year = :year', { month, year })
+      .getMany()
+  }
+
   async update(
     id: string,
     expense: Partial<ExpenseEntity>

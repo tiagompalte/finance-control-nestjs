@@ -32,6 +32,24 @@ export class IncomeService {
     return this.repository.findOne(id, { withDeleted })
   }
 
+  async findByYearMonth(year: number, month: number): Promise<IncomeEntity[]> {
+    return this.repository
+      .createQueryBuilder('income')
+      .select()
+      .innerJoin(
+        (qb) =>
+          qb
+            .select('id')
+            .addSelect('month(date)', 'month')
+            .addSelect('year(date)', 'year')
+            .from(IncomeEntity, 'inc'),
+        'inc',
+        'income.id = inc.id'
+      )
+      .where('inc.month = :month && inc.year = :year', { month, year })
+      .getMany()
+  }
+
   async update(
     id: string,
     income: Partial<IncomeEntity>

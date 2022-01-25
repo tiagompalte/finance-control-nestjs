@@ -6,6 +6,7 @@ import {
   Get,
   Param,
   ParseBoolPipe,
+  ParseIntPipe,
   ParseUUIDPipe,
   Post,
   Put,
@@ -61,6 +62,18 @@ export class IncomeController {
     withDeleted?: boolean
   ): Promise<IncomeDto[]> {
     return this.incomeService.findAll(description, withDeleted)
+  }
+
+  @Get('/:year/:month')
+  @ApiOkResponse({
+    isArray: true,
+    type: IncomeDto
+  })
+  async findByYearMonth(
+    @Param('year', ParseIntPipe) year: number,
+    @Param('month', ParseIntPipe) month: number
+  ): Promise<IncomeDto[]> {
+    return this.incomeService.findByYearMonth(year, month)
   }
 
   @Get(':id')
