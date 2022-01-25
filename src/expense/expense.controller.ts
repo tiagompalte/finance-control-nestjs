@@ -44,15 +44,21 @@ export class ExpenseController {
     isArray: true
   })
   @ApiQuery({
+    name: 'description',
+    type: 'string',
+    required: false
+  })
+  @ApiQuery({
     name: 'withDeleted',
     type: 'boolean',
     required: false
   })
   async findAll(
+    @Query('description') description?: string,
     @Query('withDeleted', new DefaultValuePipe(false), ParseBoolPipe)
     withDeleted?: boolean
   ): Promise<ExpenseDto[]> {
-    return this.expenseService.findAll(withDeleted)
+    return this.expenseService.findAll(description, withDeleted)
   }
 
   @Get(':id')

@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common'
 import { IncomeRepository } from './income.repository'
 import { IncomeEntity } from './income.entity'
 import { DateUtil } from '../util/date-util'
+import { ILike } from 'typeorm'
 
 @Injectable()
 export class IncomeService {
@@ -13,8 +14,18 @@ export class IncomeService {
     return this.repository.save(income)
   }
 
-  async findAll(withDeleted?: boolean): Promise<IncomeEntity[]> {
-    return this.repository.find({ withDeleted })
+  async findAll(
+    description?: string,
+    withDeleted?: boolean
+  ): Promise<IncomeEntity[]> {
+    return this.repository.find({
+      where: description
+        ? {
+            description: ILike(`%${description}%`)
+          }
+        : {},
+      withDeleted
+    })
   }
 
   async findById(id: string, withDeleted?: boolean): Promise<IncomeEntity> {

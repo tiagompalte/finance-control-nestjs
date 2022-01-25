@@ -46,15 +46,21 @@ export class IncomeController {
     isArray: true
   })
   @ApiQuery({
+    name: 'description',
+    type: 'string',
+    required: false
+  })
+  @ApiQuery({
     name: 'withDeleted',
     type: 'boolean',
     required: false
   })
   async findAll(
+    @Query('description') description?: string,
     @Query('withDeleted', new DefaultValuePipe(false), ParseBoolPipe)
     withDeleted?: boolean
   ): Promise<IncomeDto[]> {
-    return this.incomeService.findAll(withDeleted)
+    return this.incomeService.findAll(description, withDeleted)
   }
 
   @Get(':id')
