@@ -9,7 +9,8 @@ export class IncomeEntity extends BaseEntity {
   description: string
 
   @Column({
-    type: 'double',
+    type: 'decimal',
+    precision: 6,
     scale: 2,
     nullable: false
   })
