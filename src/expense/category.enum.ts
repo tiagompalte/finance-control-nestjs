@@ -1,5 +1,5 @@
 export enum CategoryEnum {
-  FEEDING = 'FEEDING',
+  FOOD = 'FOOD',
   HEALTH = 'HEALTH',
   HOME = 'HOME',
   TRANSPORT = 'TRANSPORT',
