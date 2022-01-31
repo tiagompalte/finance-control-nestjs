@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import {
-  IsDateString,
+  IsDate,
   IsEnum,
   IsNotEmpty,
   IsNumber,
@@ -8,6 +8,7 @@ import {
   Min
 } from 'class-validator'
 import { CategoryEnum } from '../category.enum'
+import { Type } from 'class-transformer'
 
 export class CreateExpenseDto {
   @ApiProperty()
@@ -22,7 +23,8 @@ export class CreateExpenseDto {
   value: number
 
   @ApiProperty()
-  @IsDateString()
+  @IsDate()
+  @Type(() => Date)
   date: Date
 
   @ApiProperty({

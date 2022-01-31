@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common'
 import { IncomeService } from './income.service'
 import { IncomeController } from './income.controller'
-import { IncomeRepository } from './income.repository'
 import { TypeOrmModule } from '@nestjs/typeorm'
+import { IncomeRepository } from './income.repository'
 
 @Module({
   imports: [TypeOrmModule.forFeature([IncomeRepository])],

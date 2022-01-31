@@ -1,7 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { IncomeRepository } from './income.repository'
 import { IncomeEntity } from './income.entity'
-import { DateUtil } from '../util/date-util'
 import { ILike } from 'typeorm'
 
 @Injectable()
@@ -9,14 +8,13 @@ export class IncomeService {
   constructor(private readonly repository: IncomeRepository) {}
 
   async create(income: Partial<IncomeEntity>): Promise<IncomeEntity> {
-    income.date = DateUtil.convertToDate(income.date)
-    await this.validateDescription(income.description, income.date, income.id)
+    await this.validateDescription(income.description, income.date)
     return this.repository.save(income)
   }
 
   async findAll(
     description?: string,
-    withDeleted?: boolean
+    withDeleted = false
   ): Promise<IncomeEntity[]> {
     return this.repository.find({
       where: description
@@ -28,7 +26,7 @@ export class IncomeService {
     })
   }
 
-  async findById(id: string, withDeleted?: boolean): Promise<IncomeEntity> {
+  async findById(id: string, withDeleted = false): Promise<IncomeEntity> {
     return this.repository.findOne(id, { withDeleted })
   }
 
@@ -74,7 +72,6 @@ export class IncomeService {
     id: string,
     income: Partial<IncomeEntity>
   ): Promise<IncomeEntity> {
-    income.date = DateUtil.convertToDate(income.date)
     income.id = id
     await this.validateDescription(income.description, income.date, income.id)
     return this.repository.recover(income)

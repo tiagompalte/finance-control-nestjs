@@ -1,7 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { ExpenseRepository } from './expense.repository'
 import { ExpenseEntity } from './expense.entity'
-import { DateUtil } from '../util/date-util'
 import { ILike } from 'typeorm'
 import { BalanceCategoryExpenseDto } from '../balance/balance-category-expense.dto'
 
@@ -10,7 +9,6 @@ export class ExpenseService {
   constructor(private readonly repository: ExpenseRepository) {}
 
   async create(expense: Partial<ExpenseEntity>): Promise<ExpenseEntity> {
-    expense.date = DateUtil.convertToDate(expense.date)
     await this.validateDescription(
       expense.description,
       expense.date,
@@ -21,7 +19,7 @@ export class ExpenseService {
 
   async findAll(
     description?: string,
-    withDeleted?: boolean
+    withDeleted = false
   ): Promise<ExpenseEntity[]> {
     return this.repository.find({
       where: description
@@ -33,7 +31,7 @@ export class ExpenseService {
     })
   }
 
-  async findById(id: string, withDeleted?: boolean): Promise<ExpenseEntity> {
+  async findById(id: string, withDeleted = false): Promise<ExpenseEntity> {
     return this.repository.findOne(id, { withDeleted })
   }
 
@@ -82,7 +80,6 @@ export class ExpenseService {
     id: string,
     expense: Partial<ExpenseEntity>
   ): Promise<ExpenseEntity> {
-    expense.date = DateUtil.convertToDate(expense.date)
     expense.id = id
     await this.validateDescription(
       expense.description,
