@@ -1,23 +1,14 @@
 import { Column, Entity } from 'typeorm'
 import { BaseEntity } from '../base'
 
-@Entity('income')
+@Entity('tb_income')
 export class IncomeEntity extends BaseEntity {
-  @Column({
-    nullable: false
-  })
+  @Column()
   description: string
 
-  @Column({
-    type: 'decimal',
-    precision: 6,
-    scale: 2,
-    nullable: false
-  })
+  @Column()
   value: number
 
-  @Column({
-    type: 'date'
-  })
+  @Column()
   date: Date
 }

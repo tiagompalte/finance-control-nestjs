@@ -1,17 +1,19 @@
 import { Module } from '@nestjs/common'
-import { TypeOrmModule } from '@nestjs/typeorm'
-import { ConfigModule } from '@nestjs/config'
 import { IncomeModule } from './income/income.module'
 import { ExpenseModule } from './expense/expense.module'
 import { BalanceModule } from './balance/balance.module'
+import { DatabaseModule } from './database/database.module'
+import { ConfigModule } from './config/config.module'
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
-    TypeOrmModule.forRoot(),
+    ConfigModule.register(),
+    DatabaseModule.register(),
     IncomeModule,
     ExpenseModule,
-    BalanceModule
+    BalanceModule,
+    DatabaseModule,
+    ConfigModule
   ]
 })
 export class AppModule {}

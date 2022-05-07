@@ -13,12 +13,18 @@ export abstract class BaseEntity {
   @VersionColumn()
   version: number
 
-  @CreateDateColumn()
+  @CreateDateColumn({
+    name: 'created_at'
+  })
   createDate: Date
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({
+    name: 'updated_at'
+  })
   updateDate: Date
 
-  @DeleteDateColumn()
+  @DeleteDateColumn({
+    name: 'deleted_at'
+  })
   deleteDate?: Date
 }

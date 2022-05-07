@@ -74,7 +74,7 @@ export class IncomeService {
   ): Promise<IncomeEntity> {
     income.id = id
     await this.validateDescription(income.description, income.date, income.id)
-    return this.repository.recover(income)
+    return this.repository.save(income)
   }
 
   async delete(id: string): Promise<void> {
@@ -94,7 +94,7 @@ export class IncomeService {
       year: date.getFullYear()
     }
     if (id) {
-      where = where.concat(' && id != :id')
+      where = where.concat(' && inc.id != :id')
       parameters.id = id
     }
 
