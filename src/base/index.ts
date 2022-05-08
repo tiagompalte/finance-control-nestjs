@@ -1,2 +1,3 @@
 export * from './base.entity'
-export * from './base.dto'
+export * from './version-concurrency.exception'
+export * from './version-concurrency.subscriber'

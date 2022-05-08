@@ -11,6 +11,7 @@ import {
   Post,
   Put,
   Query,
+  SerializeOptions,
   ValidationPipe
 } from '@nestjs/common'
 import { ExpenseService } from './expense.service'
@@ -20,20 +21,23 @@ import {
   ApiQuery,
   ApiTags
 } from '@nestjs/swagger'
-import { ExpenseDto } from './dtos/expense.dto'
 import { CreateExpenseDto } from './dtos/create-expense.dto'
-import { UpdateExpenseDto } from './dtos/update-expense.dto'
 import { Responses } from '../util'
+import { ExpenseEntity } from './expense.entity'
+import { UpdateExpenseDto } from './dtos/update-expense.dto'
 
 @Controller('expense')
 @ApiTags('Expense')
 @Responses()
+@SerializeOptions({
+  strategy: 'excludeAll'
+})
 export class ExpenseController {
   constructor(private readonly expenseService: ExpenseService) {}
 
   @Post()
   @ApiCreatedResponse({
-    type: ExpenseDto
+    type: ExpenseEntity
   })
   async create(
     @Body(
@@ -42,13 +46,13 @@ export class ExpenseController {
       })
     )
     expense: CreateExpenseDto
-  ): Promise<ExpenseDto> {
+  ): Promise<ExpenseEntity> {
     return this.expenseService.create(expense)
   }
 
   @Get()
   @ApiOkResponse({
-    type: ExpenseDto,
+    type: ExpenseEntity,
     isArray: true
   })
   @ApiQuery({
@@ -65,25 +69,25 @@ export class ExpenseController {
     @Query('description') description?: string,
     @Query('withDeleted', new DefaultValuePipe(false), ParseBoolPipe)
     withDeleted?: boolean
-  ): Promise<ExpenseDto[]> {
+  ): Promise<ExpenseEntity[]> {
     return this.expenseService.findAll(description, withDeleted)
   }
 
   @Get('/:year/:month')
   @ApiOkResponse({
     isArray: true,
-    type: ExpenseDto
+    type: ExpenseEntity
   })
   async findByYearMonth(
     @Param('year', ParseIntPipe) year: number,
     @Param('month', ParseIntPipe) month: number
-  ): Promise<ExpenseDto[]> {
+  ): Promise<ExpenseEntity[]> {
     return this.expenseService.findByYearMonth(year, month)
   }
 
   @Get(':id')
   @ApiOkResponse({
-    type: ExpenseDto
+    type: ExpenseEntity
   })
   @ApiQuery({
     name: 'withDeleted',
@@ -94,13 +98,13 @@ export class ExpenseController {
     @Param('id', ParseUUIDPipe) id: string,
     @Query('withDeleted', new DefaultValuePipe(false), ParseBoolPipe)
     withDeleted?: boolean
-  ): Promise<ExpenseDto> {
+  ): Promise<ExpenseEntity> {
     return this.expenseService.findById(id, withDeleted)
   }
 
   @Put(':id')
   @ApiOkResponse({
-    type: ExpenseDto
+    type: ExpenseEntity
   })
   async update(
     @Param('id', ParseUUIDPipe) id: string,
@@ -110,7 +114,7 @@ export class ExpenseController {
       })
     )
     income: UpdateExpenseDto
-  ): Promise<ExpenseDto> {
+  ): Promise<ExpenseEntity> {
     return this.expenseService.update(id, income)
   }
 

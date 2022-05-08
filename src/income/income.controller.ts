@@ -11,11 +11,11 @@ import {
   Post,
   Put,
   Query,
+  SerializeOptions,
   ValidationPipe
 } from '@nestjs/common'
 import { IncomeService } from './income.service'
 import { CreateIncomeDto } from './dtos/create-income.dto'
-import { IncomeDto } from './dtos/income.dto'
 import { UpdateIncomeDto } from './dtos/update-income.dto'
 import {
   ApiCreatedResponse,
@@ -24,16 +24,20 @@ import {
   ApiTags
 } from '@nestjs/swagger'
 import { Responses } from '../util'
+import { IncomeEntity } from './income.entity'
 
 @Controller('income')
 @ApiTags('Income')
 @Responses()
+@SerializeOptions({
+  strategy: 'excludeAll'
+})
 export class IncomeController {
   constructor(private readonly incomeService: IncomeService) {}
 
   @Post()
   @ApiCreatedResponse({
-    type: IncomeDto
+    type: IncomeEntity
   })
   async create(
     @Body(
@@ -42,13 +46,13 @@ export class IncomeController {
       })
     )
     income: CreateIncomeDto
-  ): Promise<IncomeDto> {
+  ): Promise<IncomeEntity> {
     return this.incomeService.create(income)
   }
 
   @Get()
   @ApiOkResponse({
-    type: IncomeDto,
+    type: IncomeEntity,
     isArray: true
   })
   @ApiQuery({
@@ -65,25 +69,25 @@ export class IncomeController {
     @Query('description') description?: string,
     @Query('withDeleted', new DefaultValuePipe(false), ParseBoolPipe)
     withDeleted?: boolean
-  ): Promise<IncomeDto[]> {
+  ): Promise<IncomeEntity[]> {
     return this.incomeService.findAll(description, withDeleted)
   }
 
   @Get('/:year/:month')
   @ApiOkResponse({
     isArray: true,
-    type: IncomeDto
+    type: IncomeEntity
   })
   async findByYearMonth(
     @Param('year', ParseIntPipe) year: number,
     @Param('month', ParseIntPipe) month: number
-  ): Promise<IncomeDto[]> {
+  ): Promise<IncomeEntity[]> {
     return this.incomeService.findByYearMonth(year, month)
   }
 
   @Get(':id')
   @ApiOkResponse({
-    type: IncomeDto
+    type: IncomeEntity
   })
   @ApiQuery({
     name: 'withDeleted',
@@ -94,13 +98,13 @@ export class IncomeController {
     @Param('id', ParseUUIDPipe) id: string,
     @Query('withDeleted', new DefaultValuePipe(false), ParseBoolPipe)
     withDeleted?: boolean
-  ): Promise<IncomeDto> {
+  ): Promise<IncomeEntity> {
     return this.incomeService.findById(id, withDeleted)
   }
 
   @Put(':id')
   @ApiOkResponse({
-    type: IncomeDto
+    type: IncomeEntity
   })
   async update(
     @Param('id', ParseUUIDPipe) id: string,
@@ -110,7 +114,7 @@ export class IncomeController {
       })
     )
     income: UpdateIncomeDto
-  ): Promise<IncomeDto> {
+  ): Promise<IncomeEntity> {
     return this.incomeService.update(id, income)
   }
 

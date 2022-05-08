@@ -19,6 +19,9 @@ const connectionOptions: ConnectionOptions = {
   migrationsRun: false,
   logging: true,
   migrationsTableName: 'migrations',
+  extra: {
+    decimalNumbers: true
+  },
   cli: {
     migrationsDir: path.resolve(__dirname, 'migrations')
   },

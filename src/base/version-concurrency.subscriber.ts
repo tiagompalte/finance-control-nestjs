@@ -3,7 +3,7 @@ import {
   EventSubscriber,
   UpdateEvent
 } from 'typeorm'
-import { VersionConcurrencyError } from './version-concurrency.error'
+import { VersionConcurrencyException } from './version-concurrency.exception'
 
 @EventSubscriber()
 export class VersionConcurrencySubscriber implements EntitySubscriberInterface {
@@ -25,7 +25,7 @@ export class VersionConcurrencySubscriber implements EntitySubscriberInterface {
       }
 
       if (actualVersion !== expectedVersion) {
-        throw new VersionConcurrencyError(
+        throw new VersionConcurrencyException(
           event.metadata.name,
           expectedVersion,
           actualVersion

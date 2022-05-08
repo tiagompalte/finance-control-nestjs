@@ -5,6 +5,8 @@ import {
   UpdateDateColumn,
   VersionColumn
 } from 'typeorm'
+import { Expose } from 'class-transformer'
+import { ApiProperty } from '@nestjs/swagger'
 
 export abstract class BaseEntity {
   @PrimaryColumn({
@@ -12,12 +14,16 @@ export abstract class BaseEntity {
     insert: true,
     update: false
   })
+  @ApiProperty()
+  @Expose()
   id: string
 
   @VersionColumn({
     insert: false,
     update: false
   })
+  @ApiProperty()
+  @Expose()
   version: number
 
   @CreateDateColumn({
