@@ -13,6 +13,7 @@ const connectionOptions: ConnectionOptions = {
   password: config.get('PASSWORD'),
   database: config.get('DATABASE'),
   entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+  subscribers: [__dirname + '/../**/*.subscriber{.ts,.js}'],
   migrations: [path.resolve(__dirname, 'migrations', '*.ts')],
   synchronize: false,
   migrationsRun: false,

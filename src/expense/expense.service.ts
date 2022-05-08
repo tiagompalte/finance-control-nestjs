@@ -80,13 +80,9 @@ export class ExpenseService {
     id: string,
     expense: Partial<ExpenseEntity>
   ): Promise<ExpenseEntity> {
-    expense.id = id
-    await this.validateDescription(
-      expense.description,
-      expense.date,
-      expense.id
-    )
-    return this.repository.recover(expense)
+    await this.validateDescription(expense.description, expense.date, id)
+    await this.repository.update(id, { ...expense, id })
+    return this.findById(id)
   }
 
   async delete(id: string): Promise<void> {
@@ -106,7 +102,7 @@ export class ExpenseService {
       year: date.getFullYear()
     }
     if (id) {
-      where = where.concat(' && id != :id')
+      where = where.concat(' && exp.id != :id')
       parameters.id = id
     }
 

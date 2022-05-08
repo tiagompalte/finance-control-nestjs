@@ -5,7 +5,9 @@ export class IncomeDto extends BaseDto {
   @ApiProperty()
   description: string
 
-  @ApiProperty()
+  @ApiProperty({
+    type: 'number'
+  })
   value: number
 
   @ApiProperty()

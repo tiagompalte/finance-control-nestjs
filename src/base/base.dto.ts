@@ -12,7 +12,4 @@ export abstract class BaseDto {
 
   @ApiProperty()
   updateDate: Date
-
-  @ApiProperty()
-  deleteDate?: Date
 }
