@@ -36,7 +36,12 @@ export class IncomeController {
     type: IncomeDto
   })
   async create(
-    @Body(ValidationPipe) income: CreateIncomeDto
+    @Body(
+      new ValidationPipe({
+        whitelist: true
+      })
+    )
+    income: CreateIncomeDto
   ): Promise<IncomeDto> {
     return this.incomeService.create(income)
   }
@@ -99,7 +104,12 @@ export class IncomeController {
   })
   async update(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body(ValidationPipe) income: UpdateIncomeDto
+    @Body(
+      new ValidationPipe({
+        whitelist: true
+      })
+    )
+    income: UpdateIncomeDto
   ): Promise<IncomeDto> {
     return this.incomeService.update(id, income)
   }

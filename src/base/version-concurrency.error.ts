@@ -1,7 +1,10 @@
-export class VersionConcurrencyError extends Error {
+import { BadRequestException } from '@nestjs/common'
+
+export class VersionConcurrencyError extends BadRequestException {
   constructor(entity: string, expectedVersion: number, actualVersion: number) {
-    super()
+    super(
+      `The version concurrency lock on entity ${entity} failed, version ${expectedVersion} was expected, but is actually ${actualVersion}`
+    )
     this.name = 'VersionConcurrencyError'
-    this.message = `The version concurrency lock on entity ${entity} failed, version ${expectedVersion} was expected, but is actually ${actualVersion}`
   }
 }

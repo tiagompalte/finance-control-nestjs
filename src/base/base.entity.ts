@@ -23,21 +23,24 @@ export abstract class BaseEntity {
   @CreateDateColumn({
     name: 'created_at',
     insert: false,
-    update: false
+    update: false,
+    select: false
   })
   createDate: Date
 
   @UpdateDateColumn({
     name: 'updated_at',
     insert: false,
-    update: false
+    update: false,
+    select: false
   })
   updateDate: Date
 
   @DeleteDateColumn({
     name: 'deleted_at',
     insert: false,
-    update: false
+    update: false,
+    select: false
   })
   deleteDate?: Date
 }

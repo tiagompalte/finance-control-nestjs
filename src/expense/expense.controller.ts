@@ -23,9 +23,11 @@ import {
 import { ExpenseDto } from './dtos/expense.dto'
 import { CreateExpenseDto } from './dtos/create-expense.dto'
 import { UpdateExpenseDto } from './dtos/update-expense.dto'
+import { Responses } from '../util'
 
 @Controller('expense')
 @ApiTags('Expense')
+@Responses()
 export class ExpenseController {
   constructor(private readonly expenseService: ExpenseService) {}
 
@@ -34,7 +36,12 @@ export class ExpenseController {
     type: ExpenseDto
   })
   async create(
-    @Body(ValidationPipe) expense: CreateExpenseDto
+    @Body(
+      new ValidationPipe({
+        whitelist: true
+      })
+    )
+    expense: CreateExpenseDto
   ): Promise<ExpenseDto> {
     return this.expenseService.create(expense)
   }
@@ -97,7 +104,12 @@ export class ExpenseController {
   })
   async update(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body(ValidationPipe) income: UpdateExpenseDto
+    @Body(
+      new ValidationPipe({
+        whitelist: true
+      })
+    )
+    income: UpdateExpenseDto
   ): Promise<ExpenseDto> {
     return this.expenseService.update(id, income)
   }

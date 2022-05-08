@@ -6,10 +6,4 @@ export abstract class BaseDto {
 
   @ApiProperty()
   version: number
-
-  @ApiProperty()
-  createDate: Date
-
-  @ApiProperty()
-  updateDate: Date
 }
